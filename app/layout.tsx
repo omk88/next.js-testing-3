@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/web/Navbar";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { ConvexClientProvider } from "@/components/web/ConvexClientProvider";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -39,7 +40,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange>
           <main className="max-w-7xl mx-auto w-full">
-            {children}
+            <ConvexClientProvider>
+              {children}
+            </ConvexClientProvider>
           </main>
         </ThemeProvider>
       </body>
