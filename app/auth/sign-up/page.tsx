@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { authClient } from "@/lib/auth-client";
+import z from "zod";
 
 export default function SignUpPage() {
 
@@ -19,8 +21,12 @@ export default function SignUpPage() {
         }
     })
 
-    function onSubmit() {
-        console.log("HEllo world");
+    async function onSubmit(data: z.infer<typeof signUpSchema>) {
+        await authClient.signUp.email({
+            email: data.email,
+            name: data.name,
+            password: data.password
+        });
     }
     
     return (

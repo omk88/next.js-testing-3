@@ -7,5 +7,7 @@ export function ThemeProvider({
   children,
   ...props
 }: React.ComponentProps<typeof NextThemesProvider>) {
+  const [mounted, setMounted] = React.useState(false)
+
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>
 }
