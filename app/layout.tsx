@@ -5,6 +5,7 @@ import { Navbar } from "@/components/web/Navbar";
 import { cn } from "@/lib/utils";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -38,6 +39,7 @@ export default function RootLayout({
               {children}
             </ConvexClientProvider>
           </main>
+          <Toaster closeButton />
         </ThemeProvider>
       </body>
     </html>
