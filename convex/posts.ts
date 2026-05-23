@@ -3,7 +3,7 @@ import { ConvexError, v}  from "convex/values";
 import { authComponent } from "./auth";
 
 export const createPost = mutation({
-    args: { title: v.string(), body: v.string() },
+    args: { title: v.string(), body: v.string(), imageStorageId: v.optional(v.id("_storage")) },
     handler: async (ctx, args) => {
         const user = await authComponent.safeGetAuthUser(ctx);
 
@@ -14,7 +14,8 @@ export const createPost = mutation({
         const blogArticle = await ctx.db.insert('posts', {
             title: args.title,
             body: args.body,
-            authorId: user._id
+            authorId: user._id,
+            imageStorageId: args.imageStorageId
         })
     
         return blogArticle;
@@ -28,4 +29,17 @@ export const getPosts = query({
 
         return posts;
     }
-})
+});
+
+export const generateImageUploadUrl = mutation({
+    args: {},
+    handler: async (ctx) => {
+        const user = await authComponent.safeGetAuthUser(ctx);
+
+        if(!user) {
+            throw new ConvexError("Not authenticated");
+        }
+
+        return await ctx.storage.generateUploadUrl();
+    }
+});
