@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import { CommentSection } from "@/components/web/CommentSection";
 
 interface postIdRouteProps {
     params: Promise<{
@@ -48,6 +49,8 @@ export default async function postIdRoute({ params }: postIdRouteProps) {
             <p className="text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap">{post.body}</p>
 
             <Separator className="my-8" />
+
+            <CommentSection />
         </div>
     )
 }
