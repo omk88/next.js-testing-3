@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
         protocol: "https",
         port: ""
+      },
+      {
+        hostname: "joyous-firefly-383.eu-west-1.convex.cloud",
+        protocol: "https",
+        port: ""
       }
     ]
   }

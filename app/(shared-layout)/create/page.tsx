@@ -64,7 +64,7 @@ export default function CreateRoute() {
 
                 if (response?.success) {
                     toast.success("Blog post created successfully!");
-                    router.push("/")
+                    router.push("/blog")
                 } else {
                     throw new Error("Action did not return success.");
                 }
