@@ -1,7 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { fetchQuery } from "convex/nextjs";
+import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,8 +18,13 @@ export default async function postIdRoute({ params }: postIdRouteProps) {
 
     const { postId } = await params;
     const post = await fetchQuery(api.posts.getPostById, { postId: postId });
-
-    if (!post) {
+    const preloadedComments = await preloadQuery(api.comments.getCommentsByPost, 
+        {
+            postId: postId
+        }
+    );
+    
+    if (!post) {   
         return (
             <div>
                 <h1 className="text-6xl font-extrabold text-red-500 py-20">No post found</h1>
@@ -50,7 +55,7 @@ export default async function postIdRoute({ params }: postIdRouteProps) {
 
             <Separator className="my-8" />
 
-            <CommentSection />
+            <CommentSection preloadedComments={preloadedComments} />
         </div>
     )
 }
