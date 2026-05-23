@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { CommentSection } from "@/components/web/CommentSection";
+import { Metadata } from "next";
 
 interface postIdRouteProps {
     params: Promise<{
@@ -14,15 +15,37 @@ interface postIdRouteProps {
     }>
 }
 
+export async function generateMetadata({ params }: postIdRouteProps): Promise<Metadata> {
+    const { postId } = await params;
+
+    const post = await fetchQuery(api.posts.getPostById, { postId: postId });
+
+    if (!post) {
+        return {
+            title: "Post not found"
+        };
+    }
+
+    return {
+        title: post.title,
+        description: post.body
+    }
+}
+
 export default async function postIdRoute({ params }: postIdRouteProps) {
 
     const { postId } = await params;
-    const post = await fetchQuery(api.posts.getPostById, { postId: postId });
-    const preloadedComments = await preloadQuery(api.comments.getCommentsByPost, 
-        {
+
+    // These queries will run in parallel instead of sequentially.
+    // We can do this because they do not depend on eachother.
+    const [post, preloadedComments] = await Promise.all([
+        await fetchQuery(api.posts.getPostById, { postId: postId }),
+        await preloadQuery(api.comments.getCommentsByPost, {
             postId: postId
-        }
-    );
+        })
+    ]);
+
+
     
     if (!post) {   
         return (
