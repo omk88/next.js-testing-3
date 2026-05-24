@@ -8,6 +8,8 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { CommentSection } from "@/components/web/CommentSection";
 import { Metadata } from "next";
+import { PostPresence } from "@/components/web/PostPresence";
+import { getToken } from "@/lib/auth-server";
 
 interface postIdRouteProps {
     params: Promise<{
@@ -36,13 +38,14 @@ export default async function postIdRoute({ params }: postIdRouteProps) {
 
     const { postId } = await params;
 
+    const token = await getToken();
+
     // These queries will run in parallel instead of sequentially.
     // We can do this because they do not depend on eachother.
-    const [post, preloadedComments] = await Promise.all([
-        await fetchQuery(api.posts.getPostById, { postId: postId }),
-        await preloadQuery(api.comments.getCommentsByPost, {
-            postId: postId
-        })
+    const [post, preloadedComments, userId] = await Promise.all([
+        fetchQuery(api.posts.getPostById, { postId: postId }),
+        preloadQuery(api.comments.getCommentsByPost, { postId: postId }),
+        fetchQuery(api.presence.getUserId, {}, { token })
     ]);
 
 
@@ -68,8 +71,10 @@ export default async function postIdRoute({ params }: postIdRouteProps) {
             
             <div className="space-y-4 flex flex-col">
                 <h1 className="text-4xl font-bold tracking-tight text-foreground">{ post.title }</h1>
-
-                <p className="text-sm text-muted-foreground">Posted on: {new Date(post._creationTime).toLocaleDateString("en-US")}</p>
+                <div className="flex items-center gap-2">
+                    <p className="text-sm text-muted-foreground">Posted on: {new Date(post._creationTime).toLocaleDateString("en-US")}</p>
+                    {userId && <PostPresence roomId={post._id} userId={userId} />}
+                </div>
             </div>
 
             <Separator className="my-8" />
