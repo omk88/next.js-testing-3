@@ -18,7 +18,7 @@ export function SearchInput() {
     }
 
     return (
-        <div className="relative w-full max-w-sm">
+        <div className="relative w-full max-w-sm z-10">
             <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
 
@@ -28,19 +28,20 @@ export function SearchInput() {
             { open && term.length >= 2 && (
                 <div className="absolute top-full mt-2 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95">
                     { results === undefined ? (
-                        <div>
-                            <Loader2 />
+                        <div className="flex items-center justify-center p-4 text-sm text-muted-foreground">
+                            <Loader2 className="mr-2 size-4 animate-spin" />
                             Searching...
                         </div>
                     ): results.length === 0 ? (
-                        <p>
+                        <p className="p-4 text-sm text-muted-foreground text-center">
                             No results found!
                         </p>
                     ): (
                         <div className="py-1">
                             { results.map((post) => (
-                                <Link href={`/blog/${post._id}`} key={post._id}>
-                                    <p>{ post.title }</p>
+                                <Link className="flex flex-col px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer" href={`/blog/${post._id}`} key={post._id} onClick={() => {setOpen(false), setTerm("")}}>
+                                    <p className="font-medium truncate">{ post.title }</p>
+                                    <p className="text-xs text-muted-foreground pt-1">{ post.body.substring(0, 60) }</p>
                                 </Link>
                             )) }
                         </div>
