@@ -7,6 +7,7 @@ import { fetchQuery } from "convex/nextjs";
 import { Metadata } from "next";
 import Image from 'next/image';
 import Link from "next/link";
+import { connection } from "next/server";
 import { Suspense } from "react";
 
 export const dynamic ="force-static";
@@ -34,6 +35,7 @@ export default function BlogPage() {
 }
 
 async function LoadBlogList() {
+    "use cache";
     const data = await fetchQuery(api.posts.getPosts);
 
     return (
